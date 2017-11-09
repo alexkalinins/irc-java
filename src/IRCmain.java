@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.util.Scanner;
 
 /**An IRC client in Java.
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class IRCmain {
 
@@ -16,13 +16,15 @@ public class IRCmain {
     private static String userMessage; //what client sends
     private static PrintWriter out;
     private static Scanner in;
-    private static Scanner console;
-
+    private static Scanner console = new Scanner(System.in);
+    
+    /**
+     * The program's main function.  Runs the program.
+     * @param args the command line arguments
+     * @throws IOException
+     * @throws InterruptedException 
+     */
     public static void main(String[] args) throws IOException, InterruptedException {
-
-        //make scanner for user input
-        console = new Scanner(System.in);
-
         //asks for nick, username, and realName
         System.out.print("Enter a nickname: ");
         nick = console.nextLine();
@@ -78,7 +80,11 @@ public class IRCmain {
         System.out.println("Done!");
 
     }
-
+    
+    /**Writes a command to the server.
+     * @param command the command
+     * @param message the message
+     */
     private static void write(String command, String message) {
         String fullMessage = command + " " + message;
         //>>> for things send from client
