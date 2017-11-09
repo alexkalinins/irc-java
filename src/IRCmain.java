@@ -4,6 +4,9 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
+/**An IRC client in Java.
+ * @version 0.1.0
+ */
 public class IRCmain {
 
     private static String nick;
