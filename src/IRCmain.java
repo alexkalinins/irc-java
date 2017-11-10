@@ -38,7 +38,7 @@ public class IRCmain {
         System.out.print("Enter your real name: ");
         realName = console.nextLine();
         
-        JOptionPane.showInputDialog("Hello World!");
+        JOptionPane.showMessageDialog(null, "Hello World!");
 
         //socket to freenode
         Socket socket = new Socket("chat.freenode.net", 6667);
