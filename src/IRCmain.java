@@ -3,8 +3,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
+import javax.swing.JOptionPane;
 
-/**An IRC client in Java.
+/**
+ * An IRC client in Java.
+ *
  * @version 0.1.1
  */
 public class IRCmain {
@@ -17,12 +20,14 @@ public class IRCmain {
     private static PrintWriter out;
     private static Scanner in;
     private static Scanner console = new Scanner(System.in);
-    
+    private static boolean goahead = false;
+
     /**
-     * The program's main function.  Runs the program.
+     * The program's main function. Runs the program.
+     *
      * @param args the command line arguments
      * @throws IOException
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
     public static void main(String[] args) throws IOException, InterruptedException {
         //asks for nick, username, and realName
@@ -32,6 +37,8 @@ public class IRCmain {
         username = console.nextLine();
         System.out.print("Enter your real name: ");
         realName = console.nextLine();
+        
+        JOptionPane.showInputDialog("Hello World!");
 
         //socket to freenode
         Socket socket = new Socket("chat.freenode.net", 6667);
@@ -48,18 +55,16 @@ public class IRCmain {
         while (in.hasNext()) {
             String serverMessage = in.nextLine();
             System.out.println("<<< " + serverMessage);
+            goahead = (serverMessage.endsWith("End of /NAMES list."));
             if (serverMessage.startsWith("PING")) { //check if message STARTS with PING
                 //splits message after first space
                 String pingContents = serverMessage.split("", 2)[1];
                 //replies to the server with a pong
                 write("PONG", pingContents);
             }
-            userCommand = console.nextLine();      
-            if (userCommand != "") {
-                userMessage = userCommand + "\r\n";
-                System.out.println(">>>" + userCommand);
-                out.print(":" + userMessage);
-                out.flush();
+            if (goahead) {
+                userInput();
+                System.out.print("\r");
             }
         }
 
@@ -77,11 +82,13 @@ public class IRCmain {
         out.close();
         socket.close();
 
-        System.out.println("Done!");
+        System.out.println("Disconnected from server");
 
     }
-    
-    /**Writes a command to the server.
+
+    /**
+     * Writes a command to the server.
+     *
      * @param command the command
      * @param message the message
      */
@@ -91,5 +98,30 @@ public class IRCmain {
         System.out.println(">>>" + fullMessage);
         out.print(fullMessage + "\r\n"); //all commands must end with \r\n
         out.flush();
+    }
+//
+//    private static void userInput() {
+//        System.out.print("Command: ");
+//        userMessage = console.nextLine();
+//        System.out.println("user >>> " + userMessage+"\r");
+//        userCommand = userMessage + "\r\n";
+//        System.out.println("\r");
+//        out.print(userCommand);
+//        out.flush();
+//        userMessage = null;
+//        userCommand = null;
+//    }
+    
+    private static void userInput(){
+        while(true){
+    
+        userMessage = JOptionPane.showInputDialog("Enter Command:");
+        userCommand = userMessage + "\r\n";
+        System.out.print(">>> "+userCommand);
+        out.print(userCommand);
+        out.flush();
+        userMessage = null;
+        userCommand = null;
+    }
     }
 }
